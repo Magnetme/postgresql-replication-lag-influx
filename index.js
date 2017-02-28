@@ -15,6 +15,15 @@ const pokeAll = () => process.env.SERVERS.split(',').map(url => {
 	};
 }).forEach(config => poke(config));
 
+const resultData = (config, lag) => {
+	const tags = Object.assign({}, {host : config.host, port : config.port});
+	if (CLUSTER_NAME) res.cluster = CLUSTER_NAME;
+	return {
+		tags : tags,
+		fields : {lag : lag}
+	};
+};
+
 const poke = (config) => {
 	const client = new pg.Client(config);
 	const url = `${config.host}:${config.port}`;
@@ -33,15 +42,12 @@ const poke = (config) => {
 					if (err) throw err;
 
 					const lagInMs = Math.round(result.rows[0].lag * 1000);
-					if(IS_DEBUG) console.log(`${url} had a replication of ${lagInMs} ms`);
 
 					setTimeout(() => poke(config), RATE);
 					influx.writeMeasurement(`db.postgres.replication.lag`, [
-						{
-							tags: { host: config.host, port: config.port, cluster: CLUSTER_NAME },
-							fields: { lag: lagInMs }
-						}
-					])
+						resultData(config, lagInMs)
+					]);
+					if (IS_DEBUG) console.log(`${url} had a replication of ${lagInMs} ms`);
 				});
 			} else {
 				if (IS_DEBUG) {
