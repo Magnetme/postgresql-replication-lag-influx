@@ -25,7 +25,7 @@ const pokeAll = () => process.env.SERVERS.split(',').map(url => {
 
 const resultData = (config, lag) => {
 	const tags = Object.assign({}, {host : config.host, port : config.port});
-	if (CLUSTER_NAME) res.cluster = CLUSTER_NAME;
+	if (CLUSTER_NAME) tags.cluster = CLUSTER_NAME;
 	return {
 		tags : tags,
 		fields : {lag : lag}
