@@ -5,6 +5,13 @@ const IS_DEBUG = (process.env.DEBUG && process.env.DEBUG.toLowerCase() === 'true
 const RATE = (process.env.RATE && parseInt(process.env.RATE, 10)) || 2500;
 const CLUSTER_NAME = process.env.CLUSTER_NAME || null;
 
+const LAG_QUERY = `SELECT
+CASE
+WHEN pg_last_xlog_receive_location() = pg_last_xlog_replay_location() THEN 0
+ELSE EXTRACT (EPOCH FROM now() - pg_last_xact_replay_timestamp())
+END
+AS replication_lag`;
+
 console.log(`Cluster name is ${CLUSTER_NAME}`);
 const pokeAll = () => process.env.SERVERS.split(',').map(url => {
 	const splitted = url.split(':');
@@ -39,7 +46,7 @@ const poke = (config) => {
 			// just print the result to the console
 			if (result.rows[0].is_slave) {
 				// Server is a slave, fetch the replication lag
-				client.query('SELECT EXTRACT(EPOCH FROM (now() - pg_last_xact_replay_timestamp())) as lag;', [], (err, result) => {
+				client.query(LAG_QUERY, [], (err, result) => {
 					if (err) throw err;
 
 					const lagInMs = Math.round(result.rows[0].lag * 1000);
