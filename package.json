@@ -1,6 +1,6 @@
 {
   "name": "postgresql-replication-lag-influx",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Every x time unit, query the cluster and log the replication lag to influx",
   "main": "index.js",
   "dependencies": {
