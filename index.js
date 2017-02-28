@@ -5,6 +5,7 @@ const IS_DEBUG = (process.env.DEBUG && process.env.DEBUG.toLowerCase() === 'true
 const RATE = (process.env.RATE && parseInt(process.env.RATE, 10)) || 2500;
 const CLUSTER_NAME = process.env.CLUSTER_NAME || null;
 
+console.log(`Cluster name is ${CLUSTER_NAME}`);
 const pokeAll = () => process.env.SERVERS.split(',').map(url => {
 	const splitted = url.split(':');
 	console.log(`Will be monitoring ${url}`);
