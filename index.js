@@ -3,10 +3,11 @@ const Influx = require('influx');
 
 const IS_DEBUG = (process.env.DEBUG && process.env.DEBUG.toLowerCase() === 'true') || false;
 const RATE = (process.env.RATE && parseInt(process.env.RATE, 10)) || 2500;
-const CLUSTER_NAME = process.env.CLUSTER_NAME || 'unknown';
+const CLUSTER_NAME = process.env.CLUSTER_NAME || null;
 
 const pokeAll = () => process.env.SERVERS.split(',').map(url => {
 	const splitted = url.split(':');
+	console.log(`Will be monitoring ${url}`);
 	return {
 		host : splitted[0],
 		port : splitted[1] || 5432,
@@ -35,10 +36,10 @@ const poke = (config) => {
 					if(IS_DEBUG) console.log(`${url} had a replication of ${lagInMs} ms`);
 
 					setTimeout(() => poke(config), RATE);
-					influx.writeMeasurement(`db.postgres.${CLUSTER_NAME}.lag`, [
+					influx.writeMeasurement(`db.postgres.replication.lag`, [
 						{
-							tags: { host: config.host, port: config.port },
-							fields: { lag: lagInMs },
+							tags: { host: config.host, port: config.port, cluster: CLUSTER_NAME },
+							fields: { lag: lagInMs }
 						}
 					])
 				});
