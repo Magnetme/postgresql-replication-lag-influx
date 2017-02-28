@@ -1,0 +1,27 @@
+{
+  "name": "postgresql-replication-lag-influx",
+  "version": "1.0.0",
+  "description": "Every x time unit, query the cluster and log the replication lag to influx",
+  "main": "index.js",
+  "dependencies": {
+    "influx": "^5.0.0-alpha.4",
+    "pg": "^6.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Magnetme/postgresql-replication-lag-influx.git"
+  },
+  "keywords": [
+    "postgresql"
+  ],
+  "author": "Rogier Slag <rogier@magnet.me>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Magnetme/postgresql-replication-lag-influx/issues"
+  },
+  "homepage": "https://github.com/Magnetme/postgresql-replication-lag-influx#readme"
+}
