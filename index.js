@@ -37,7 +37,10 @@ const poke = (config) => {
 	const url = `${config.host}:${config.port}`;
 
 	client.connect(err => {
-		if (err) throw err;
+		if (err) {
+			if(IS_DEBUG) console.warn(`Cannot connect to ${url}`);
+			return;
+		}
 
 		// execute a query on our database
 		client.query('SELECT pg_is_in_recovery() as is_slave;', [], (err, result) => {
