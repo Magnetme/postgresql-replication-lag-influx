@@ -1,4 +1,4 @@
-FROM node:4.2
+FROM node:12.13
 MAINTAINER Rogier Slag <rogier@magnet.me>
 
 RUN mkdir /app
